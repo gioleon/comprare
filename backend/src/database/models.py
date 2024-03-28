@@ -1,7 +1,24 @@
-from sqlalchemy import Column, BigInteger, String, ForeignKey
+import enum
+from sqlalchemy import Column, BigInteger, String, ForeignKey, Float, Enum
+from sqlalchemy_utils import PasswordType, force_auto_coercion
 from database.database import Base
 
 
+force_auto_coercion()
+
+class BusinessCategory(Base):
+    __tablename__ = 'business_category'
+    id = Column('id', BigInteger, primary_key=True)
+    name = Column('name', String, unique=True, nullable=False)
+
+
+class Business(Base):
+    __tablename__ = 'business'
+    id = Column('id', BigInteger, primary_key=True)
+    name = Column('name', String, unique=False, nullable=False)
+    direction = Column('direction', String, nullable=False, unique=False)
+    description = Column('description', String, nullable=False)
+    business_category_id = Column('business_category_id', ForeignKey('business_category.id'))
 
 
 class Category(Base):
@@ -11,9 +28,57 @@ class Category(Base):
     
     
 class SubCategory(Base):
-    __tablename__ = 'subcategory'
+    __tablename__ = 'sub_category'
     id = Column('id', BigInteger, primary_key=True)
     category_id = Column("category_id", ForeignKey("category.id"))
     name = Column('name', String, unique=True, nullable=False)
+    
+
+class Brand(Base):
+    __tablename__ = 'brand'
+    id = Column('id', BigInteger, primary_key=True)
+    name = Column('name', String, unique=True, nullable=False)
+
+    
+class Status(enum.Enum):
+    active = 'active'
+    inactive = 'inactive'
+    pending = 'pending'    
+
+    
+class Product(Base):
+    __tablename__ = 'product'
+    id = Column('id', BigInteger, primary_key=True)
+    name = Column('name', String, unique=True, nullable=False)
+    price = Column('price', Float, nullable=False, unique=False)
+    sub_category_id = Column('sub_category_id', ForeignKey('sub_category.id'))
+    brand_id = Column('brand_id', ForeignKey('brand.id'))
+    stock = Column('stock', BigInteger, nullable=False, unique=False)
+    state = Column('state', Enum(Status))
+    description = Column('description', String, unique=False, nullable=False)
+    
+    
+class BusinessStaffRole(enum.Enum):
+    owner = 'owner'
+    supervisor = 'supervisor'
+    worker = 'worker'
+
+    
+class BusinessStaff(Base):
+    __tablename__ = 'business_staff'
+    id = Column('id', BigInteger, primary_key=True)
+    name = Column('name', String, unique=False, nullable=False)
+    identification_number = Column('identification_number', String, nullable=False, unique=True)
+    email = Column('email', String, unique=True, nullable=False)
+    password = Column(
+        'password', 
+        PasswordType(
+            schemes = [
+                'md5_crypt'
+            ],
+            max_length=20
+        ),         
+    )
+    role = Column('role', Enum(BusinessStaffRole))
     
     

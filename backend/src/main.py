@@ -1,5 +1,6 @@
-from database import database
 from fastapi import FastAPI
+from database import database
+from database import models
 
 
 
