@@ -1,5 +1,6 @@
 import enum
-from sqlalchemy import Column, BigInteger, String, ForeignKey, Float, Enum
+from sqlalchemy.sql import func
+from sqlalchemy import Column, BigInteger, String, ForeignKey, Float, Enum, DateTime, Integer
 from sqlalchemy_utils import PasswordType, force_auto_coercion
 from database.database import Base
 
@@ -40,7 +41,7 @@ class Brand(Base):
     name = Column('name', String, unique=True, nullable=False)
 
     
-class Status(enum.Enum):
+class ProductStatus(enum.Enum):
     active = 'active'
     inactive = 'inactive'
     pending = 'pending'    
@@ -54,7 +55,7 @@ class Product(Base):
     sub_category_id = Column('sub_category_id', ForeignKey('sub_category.id'))
     brand_id = Column('brand_id', ForeignKey('brand.id'))
     stock = Column('stock', BigInteger, nullable=False, unique=False)
-    state = Column('state', Enum(Status))
+    state = Column('state', Enum(ProductStatus))
     description = Column('description', String, unique=False, nullable=False)
     
     
@@ -81,4 +82,58 @@ class BusinessStaff(Base):
     )
     role = Column('role', Enum(BusinessStaffRole))
     
+    
+class Customer(Base):
+    __tablename__ = 'customer'
+    id = Column('id', BigInteger, primary_key=True)
+    name = Column('name', String, unique=False, nullable=False)
+    identification_number = Column('identification_number', String, nullable=False, unique=True)
+    email = Column('email', String, unique=True, nullable=False)
+    password = Column(
+        'password', 
+        PasswordType(
+            schemes = [
+                'md5_crypt'
+            ],
+            max_length=20
+        ),         
+    )
+    
+    
+class PaymentMethod(enum.Enum):
+    cash = 'cash'
+    card = 'card' 
+    
+
+class TransactionStatus(enum.Enum):
+    completed = 'completed'
+    pending = 'pending'
+    canceled = 'canceled'    
+
+    
+class Transaction(Base):
+    __tablename__ = 'transaction'
+    id = Column('id', BigInteger, primary_key=True)
+    customer_id = Column('customer_id', ForeignKey('customer.id'))
+    business_id = Column('business_id', ForeignKey('business.id'))
+    transaction_date = Column(
+        'transaction_date', 
+        DateTime,
+        nullable=False,
+        unique=False,
+        server_default=func.now()
+    )
+    total_amount = Column('total_amount', Float, unique=False, nullable=False)
+    payment_method = Column('payment_method', Enum(PaymentMethod), nullable=False, unique=False)
+    status = Column('status', Enum(TransactionStatus), unique=False, nullable=False)
+    
+
+class TransactionDetails(Base):
+    __tablename__ = 'transaction_details'
+    id = Column('id', BigInteger, primary_key=True)
+    transaction_id = Column('transaction_id', ForeignKey('transaction.id'))
+    product_id = Column('product_id', ForeignKey('product.id'))
+    quantity = Column('quantity', Integer, unique=False, nullable=False)
+    unit_price = Column('unit_price', Float, unique=False, nullable=False)
+    discount = Column('discount', Float, unique=False, nullable=False)
     
