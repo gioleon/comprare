@@ -55,7 +55,7 @@ class Product(Base):
     sub_category_id = Column('sub_category_id', ForeignKey('sub_category.id'))
     brand_id = Column('brand_id', ForeignKey('brand.id'))
     stock = Column('stock', BigInteger, nullable=False, unique=False)
-    state = Column('state', Enum(ProductStatus))
+    status = Column('state', Enum(ProductStatus))
     description = Column('description', String, unique=False, nullable=False)
     
     
