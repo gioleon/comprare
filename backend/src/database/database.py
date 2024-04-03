@@ -3,7 +3,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy_utils import database_exists, create_database
 
-from config.config import ConfigClass
+from src.config.config import ConfigClass
 
 # Database URL
 URL = ConfigClass.SQLALCHEMY_DATABASE_URL
@@ -27,3 +27,11 @@ if not database_exists(url=engine.url):
 SessionLocal = sessionmaker(bind=engine, autocommit=False, autoflush=False)
 
 Base = declarative_base() # It configures our python classes with Table and mapper attributes
+
+
+def get_session():
+    session = SessionLocal()
+    try:
+        yield session
+    finally:
+        session.close()

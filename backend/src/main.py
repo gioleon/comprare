@@ -1,20 +1,13 @@
 from fastapi import FastAPI
-from database import database
-from database import models
-from database import schemas
-from service import category_service as service
+from src.database.database import engine, Base
+from src.api.routes.api import router
 
-database.Base.metadata.create_all(bind=database.engine)
+Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
+app.include_router(router)
 
 @app.get('/')
 def hello_word():
     return {'hello world'}
-
-
-@app.post('/category')
-def save_category(category : schemas.Category):
-    service.save(database.SessionLocal(), category) 
-    return {'sucess': 200}
 

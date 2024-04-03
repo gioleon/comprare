@@ -2,10 +2,15 @@ import enum
 from sqlalchemy.sql import func
 from sqlalchemy import Column, BigInteger, String, ForeignKey, Float, Enum, DateTime, Integer
 from sqlalchemy_utils import PasswordType, force_auto_coercion
-from database.database import Base
+from src.database.database import Base
 
 
 force_auto_coercion()
+
+
+class NotFoundException(Exception):
+    pass
+
 
 class BusinessCategory(Base):
     __tablename__ = 'business_category'
