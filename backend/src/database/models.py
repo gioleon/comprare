@@ -12,6 +12,23 @@ class NotFoundException(Exception):
     pass
 
 
+class Owner(Base):
+    __tablename__ = 'owner'
+    id = Column('id', BigInteger, primary_key=True)
+    name = Column('name', String, unique=False, nullable=False)
+    identification_number = Column('identification_number', String, nullable=False, unique=True)
+    email = Column('email', String, unique=True, nullable=False)
+    password = Column(
+        'password', 
+        PasswordType(
+            schemes = [
+                'md5_crypt'
+            ],
+            max_length=20
+        ),         
+    )
+
+
 class BusinessCategory(Base):
     __tablename__ = 'business_category'
     id = Column('id', BigInteger, primary_key=True)
