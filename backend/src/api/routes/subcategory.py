@@ -47,7 +47,7 @@ def find_subcategory_by_id(
     session=Depends(get_session)
 ):
     try:
-        subcategory = SubCategoryService(session).find_by_subcategory_id(subcategory_id)
+        subcategory = SubCategoryService(session).find_subcategory_id(subcategory_id)
 
     except models.NotFoundException as e:
         raise HTTPException(

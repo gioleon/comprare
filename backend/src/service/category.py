@@ -13,7 +13,7 @@ class CategoryService:
 
         return schemas.Category(**category.__dict__)
 
-    def find_by_category_id(self, category_id: int) -> schemas.Category:
+    def find_category_id(self, category_id: int) -> schemas.Category:
 
         category: models.Category = self._repository.find_category_by_id(
             category_id)
@@ -28,7 +28,7 @@ class CategoryService:
 
     def get_all_categories(self) -> List[schemas.Category]:
 
-        # categories = list(map(lambda x: schemas.Category(
-        #     **x.__dict__), self._repository.get_all_categories()))
+        categories = list(map(lambda x: schemas.Category(
+            **x.__dict__), self._repository.get_all_categories()))
 
-        return self._repository.get_all_categories()
+        return categories

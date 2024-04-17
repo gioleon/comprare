@@ -15,7 +15,7 @@ class SubCategoryService:
         return schemas.SubCategory(**subcategory.__dict__)
 
 
-    def find_by_subcategory_id(self, subcategory_id: int) -> schemas.SubCategory:
+    def find_subcategory_id(self, subcategory_id: int) -> schemas.SubCategory:
 
         subcategory: models.SubCategory = self._repository.find_subcategory_by_id(
             subcategory_id)

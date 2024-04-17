@@ -1,7 +1,7 @@
 import enum
 from sqlalchemy.sql import func
 from sqlalchemy import Column, BigInteger, String, ForeignKey, Float, Enum, DateTime, Integer
-from sqlalchemy_utils import PasswordType, force_auto_coercion
+from sqlalchemy_utils import force_auto_coercion
 from src.database.database import Base
 
 
@@ -18,15 +18,7 @@ class Owner(Base):
     name = Column('name', String, unique=False, nullable=False)
     identification_number = Column('identification_number', String, nullable=False, unique=True)
     email = Column('email', String, unique=True, nullable=False)
-    password = Column(
-        'password', 
-        PasswordType(
-            schemes = [
-                'md5_crypt'
-            ],
-            max_length=20
-        ),         
-    )
+    password = Column('password', String(255), unique=False, nullable=False)
 
 
 class BusinessCategory(Base):
@@ -42,6 +34,8 @@ class Business(Base):
     direction = Column('direction', String, nullable=False, unique=False)
     description = Column('description', String, nullable=False)
     business_category_id = Column('business_category_id', ForeignKey('business_category.id'))
+    email = Column('email', String, unique=True, nullable=False)
+    password = Column('password', String(255), unique=False, nullable=False)
 
 
 class Category(Base):
@@ -72,6 +66,7 @@ class ProductStatus(enum.Enum):
 class Product(Base):
     __tablename__ = 'product'
     id = Column('id', BigInteger, primary_key=True)
+    business_id = Column('business_id', ForeignKey('business.id'))
     name = Column('name', String, unique=True, nullable=False)
     price = Column('price', Float, nullable=False, unique=False)
     sub_category_id = Column('sub_category_id', ForeignKey('sub_category.id'))
@@ -93,15 +88,7 @@ class BusinessStaff(Base):
     name = Column('name', String, unique=False, nullable=False)
     identification_number = Column('identification_number', String, nullable=False, unique=True)
     email = Column('email', String, unique=True, nullable=False)
-    password = Column(
-        'password', 
-        PasswordType(
-            schemes = [
-                'md5_crypt'
-            ],
-            max_length=20
-        ),         
-    )
+    password = Column('password', String(255), unique=False, nullable=False)
     role = Column('role', Enum(BusinessStaffRole))
     
     
@@ -111,15 +98,7 @@ class Customer(Base):
     name = Column('name', String, unique=False, nullable=False)
     identification_number = Column('identification_number', String, nullable=False, unique=True)
     email = Column('email', String, unique=True, nullable=False)
-    password = Column(
-        'password', 
-        PasswordType(
-            schemes = [
-                'md5_crypt'
-            ],
-            max_length=20
-        ),         
-    )
+    password = Column('password', String(255), unique=False, nullable=False)
     
     
 class PaymentMethod(enum.Enum):

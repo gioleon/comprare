@@ -1,8 +1,8 @@
-"""add_lat_lon_columns_to_business
+"""drop_cols_latitude_longitude_in_business
 
-Revision ID: e680b2fb859a
-Revises: 
-Create Date: 2024-03-28 00:24:42.087196
+Revision ID: f0aaaef45f15
+Revises: d45c95831fc5
+Create Date: 2024-04-12 07:42:46.361161
 
 """
 from alembic import op
@@ -10,13 +10,18 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'e680b2fb859a'
-down_revision = None
+revision = 'f0aaaef45f15'
+down_revision = 'd45c95831fc5'
 branch_labels = None
 depends_on = None
 
 
 def upgrade() -> None:
+    op.drop_column('business', 'latitude')
+    op.drop_column('business', 'longitude')
+
+
+def downgrade() -> None:
     op.add_column(
         'business', 
         sa.Column(
@@ -36,8 +41,3 @@ def upgrade() -> None:
             nullable=False
         )
     )
-
-
-def downgrade() -> None:
-    op.drop_column('business', 'latitude')
-    op.drop_column('business', 'longitude')

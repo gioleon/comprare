@@ -33,7 +33,7 @@ def find_category_by_id(
     session=Depends(get_session)
 ):
     try:
-        category = CategoryService(session).find_by_category_id(category_id)
+        category = CategoryService(session).find_category_id(category_id)
 
     except models.NotFoundException as e:
         raise HTTPException(

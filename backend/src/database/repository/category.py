@@ -37,7 +37,7 @@ class CategoryRepository:
         self._session.commit()
         self._session.refresh(session_category)
 
-        return 
+        return session_category
 
 
     def delete(self, category_id: int) -> models.Category:
